@@ -1,0 +1,403 @@
+import java.util.Scanner;
+import java.util.Random;
+import java.util.Arrays;
+
+public class GerenciamentoArray {
+    public static void main(String[] args) {
+        Scanner tec = new Scanner(System.in);
+        int[] array = new int[15];
+        int tamanhoArray = 0;
+        int menu = -1;
+        boolean ordenado = false;
+
+        while (menu != 0) {
+            exibirMenu();
+            menu = tec.nextInt();
+            tec.nextLine();
+
+            if (menu == 0) {
+                System.out.println("Programa encerrado.");
+                break;
+            }
+
+            switch (menu) {
+                case 1 -> {
+                    zerarArray(array);
+                    tamanhoArray = 0;
+                    System.out.println("O array foi zerado.");
+                }
+                case 2 -> {
+                    inserirValor(array, tamanhoArray , tec);
+                    tamanhoArray++;
+                    System.out.println("Valor inserido no vetor.");
+                }
+
+                case 3 -> {
+                    System.out.print("Digite o valor a ser apagado: ");
+                    int valor = tec.nextInt();
+                    apagarValorDoArray(array, tamanhoArray, valor, tec);
+                }
+
+                case 4 -> consultarValorNoarray(array, tamanhoArray, tec);
+                case 5 -> System.out.println("Quantidade de valores significativos já ocupam o array: " + tamanhoArray);
+                case 6 -> consultarMaiorValor(array, tamanhoArray);
+                case 7 -> consultarMenorValor(array, tamanhoArray);
+                case 8 -> listarValores(array, tamanhoArray);
+                case 9 -> {
+                    preencherArrayAleatoriamenteOrdenado(array, tamanhoArray);
+                    tamanhoArray = array.length;
+                    System.out.println("Array preenchido com valores aleatórios ordenados sequencialmente.");
+                }
+                case 10 -> consultarValorBinario(array, tamanhoArray, tec);
+                case 11 -> consultarValorSequencial(array, tamanhoArray, tec);
+                case 12 -> {
+                    System.out.println("Comparando busca sequencial e binária:");
+                    System.out.println("Número total de comparações realizadas: " + totalComparacoes);
+                }
+                case 13 -> {
+                    preencherArrayAleatoriamenteNaoOrdenado(array, tamanhoArray);
+                    System.out.println("Valores aleatórios gerados e inseridos no array.");
+                }
+
+                case 14 -> {
+                    if (ordenado) {
+                        System.out.println("O vetor já está ordenado.");
+                    } else {
+                        long startTime = System.nanoTime();
+                        bubbleSort(array, tamanhoArray);
+                        long endTime = System.nanoTime();
+                        long duration = (endTime - startTime) / 1000; // Tempo em microssegundos
+                        ordenado = true;
+                        System.out.println("Bubble Sort executado em " + duration + " microssegundos.");
+                        System.out.println("Número total de comparações realizadas: " + totalComparacoes);
+                    }
+                }
+                case 15 -> {
+                    if (ordenado) {
+                        System.out.println("O vetor já está ordenado.");
+                    } else {
+                        long startTime = System.nanoTime();
+                        selectionSort(array, tamanhoArray);
+                        long endTime = System.nanoTime();
+                        long duration = (endTime - startTime) / 1000; // Tempo em microssegundos
+                        ordenado = true;
+                        System.out.println("Selection Sort executado em " + duration + " microssegundos.");
+                        System.out.println("Número total de comparações realizadas: " + totalComparacoes);
+                    }
+                }
+                case 16 -> {
+                    if (ordenado) {
+                        System.out.println("O vetor já está ordenado.");
+                    } else {
+                        long startTime = System.nanoTime();
+                        insertionSort(array, tamanhoArray);
+                        long endTime = System.nanoTime();
+                        long duration = (endTime - startTime) / 1000; // Tempo em microssegundos
+                        ordenado = true;
+                        System.out.println("Insertion Sort executado em " + duration + " microssegundos.");
+                        System.out.println("Número total de comparações realizadas: " + totalComparacoes);
+                    }
+                }
+                case 17 -> {
+                    if (ordenado) {
+                        System.out.println("O vetor já está ordenado.");
+                    } else {
+                        long startTime = System.nanoTime();
+                        quickSort(array, 0, tamanhoArray - 1);
+                        long endTime = System.nanoTime();
+                        long duration = (endTime - startTime) / 1000; // Tempo em microssegundos
+                        ordenado = true;
+                        System.out.println("Quick Sort executado em " + duration + " microssegundos.");
+                        System.out.println("Número total de comparações realizadas: " + totalComparacoes);
+                    }
+                }
+
+                default -> System.out.println("Opção inválida.");
+            }
+        }
+
+        tec.close();
+    }
+
+    static void exibirMenu() {
+        System.out.println("Menu:");
+        System.out.println("1) Zerar o array");
+        System.out.println("2) Inserir um valor no array");
+        System.out.println("3) Apagar um valor do array");
+        System.out.println("4) Consultar se existe determinado valor no array");
+        System.out.println("5) Consultar quantos valores significativos já ocupam o array");
+        System.out.println("6) Consultar o maior valor armazenado no array");
+        System.out.println("7) Consultar o menor valor armazenado no array");
+        System.out.println("8) Listar valores armazenados no array");
+        System.out.println("9) Preencher array com valores aleatórios ordenados sequencialmente");
+        System.out.println("10) Consultar valor no array usando busca binária");
+        System.out.println("11) Consultar valor no array usando busca sequencial");
+        System.out.println("12) Comparar busca sequencial e binária");
+        System.out.println("13) Gerar valores aleatoriamente");
+        System.out.println("14) Bubble Sort");
+        System.out.println("15) Selection Sort");
+        System.out.println("16) Insertion Sort");
+        System.out.println("17) Quick Sort");
+        System.out.println("0) Sair do programa");
+        System.out.print("Escolha uma opção: ");
+    }
+
+    static int totalComparacoes = 0;
+
+    static void inserirValor(int[] array,int tamanhoArray, Scanner tec) {
+        Random random = new Random();
+
+
+        int valor = random.nextInt(50) + 1;
+
+        for (int i = 0; i < tamanhoArray; i++) {
+            if (array[i] == 0) {
+                array[i] = valor;
+                System.out.println("Valor aleatório inserido no array: " + valor);
+
+            }
+        }
+    }
+
+    static void zerarArray(int[] array) {
+        for (int i = 0; i < array.length; i++) {
+            array[i] = 0;
+        }
+    }
+
+    static void apagarValorDoArray(int[] array, int tamanhoArray, int valor, Scanner tec) {
+
+        int valorDeletar;
+        valorDeletar = tec.nextInt();
+        tec.nextLine();
+        for(int i=0; i<array.length;i++){
+            if(array[i] == valorDeletar){
+                array[i]=0;
+                System.out.println("Valor " + valorDeletar + " foi apagado do vetor.");
+
+            }
+
+        }
+    }
+
+
+
+    static void consultarValorNoarray(int[] array, int tamanhoArray, Scanner tec) {
+        System.out.print("Digite o valor a ser consultado: ");
+        int valor = tec.nextInt();
+        for (int i = 0; i < tamanhoArray; i++) {
+            if (array[i] == valor) {
+                System.out.println("Valor encontrado no índice " + i + " do array.");
+                return;
+            }
+        }
+        System.out.println("Valor não encontrado no array.");
+    }
+
+    static void consultarMaiorValor(int[] array, int tamanhoArray) {
+        if (tamanhoArray == 0) {
+            System.out.println("O array está vazio.");
+        } else {
+            int maior = array[0];
+            int indiceMaior = 0;
+            for (int i = 1; i < tamanhoArray; i++) {
+                if (array[i] > maior) {
+                    maior = array[i];
+                    indiceMaior = i;
+                }
+            }
+            System.out.println("Maior valor: " + maior + ", no índice " + indiceMaior + " do array.");
+        }
+    }
+
+    static void consultarMenorValor(int[] array, int tamanhoArray) {
+        if (tamanhoArray == 0) {
+            System.out.println("O array está vazio.");
+        } else {
+            int menor = array[0];
+            int indiceMenor = 0;
+            for (int i = 1; i < tamanhoArray; i++) {
+                if (array[i] < menor) {
+                    menor = array[i];
+                    indiceMenor = i;
+                }
+            }
+            System.out.println("Menor valor: " + menor + ", no índice " + indiceMenor + " do array.");
+        }
+    }
+
+    static void listarValores(int[] array, int tamanhoArray) {
+        if (tamanhoArray == 0) {
+            System.out.println("O array está vazio.");
+        } else {
+            Arrays.sort(array, 0, tamanhoArray);
+            System.out.println("Valores armazenados no array:");
+            for (int i = 0; i < tamanhoArray; i++) {
+                System.out.println("Índice " + i + ": " + array[i]);
+            }
+        }
+    }
+
+    static void preencherArrayAleatoriamenteOrdenado(int[] array, int tamanhoArray) {
+        Random random = new Random(System.currentTimeMillis());
+        int valor = 1;
+        for (int i = tamanhoArray; i < array.length; i++) {
+            array[i] = valor;
+            valor += random.nextInt(3) + 1;
+        }
+    }
+
+    static void consultarValorBinario(int[] array, int tamanhoArray, Scanner tec) {
+        if (tamanhoArray == 0) {
+            System.out.println("O array está vazio.");
+            return;
+        }
+
+        Arrays.sort(array, 0, tamanhoArray);
+        System.out.print("Digite o valor a ser consultado: ");
+        int valor = tec.nextInt();
+        int resultado = buscaBinaria(array, valor);
+
+        if (resultado != -1) {
+            System.out.println("Valor encontrado no índice " + resultado + " do array.");
+        } else {
+            System.out.println("Valor não encontrado no array.");
+        }
+    }
+
+    static int buscaBinaria(int[] array, int valor) {
+        int inicio = 0;
+        int fim = array.length - 1;
+
+        while (inicio <= fim) {
+            int meio = inicio + (fim - inicio) / 2;
+
+            if (array[meio] == valor) {
+                return meio;
+            }
+
+            if (array[meio] < valor) {
+                inicio = meio + 1;
+            } else {
+                fim = meio - 1;
+            }
+        }
+        totalComparacoes++;
+        return -1;
+
+    }
+
+    static void consultarValorSequencial(int[] array, int tamanhoArray, Scanner tec) {
+        System.out.print("Digite o valor a ser consultado: ");
+        int valor = tec.nextInt();
+        for (int i = 0; i < tamanhoArray; i++) {
+            if (array[i] == valor) {
+                System.out.println("Valor encontrado no índice " + i + " do array.");
+                return;
+            }
+        }
+        System.out.println("Valor não encontrado no array.");
+        totalComparacoes++;
+    }
+    static void preencherArrayAleatoriamenteNaoOrdenado(int[] array, int tamanhoArray) {
+        Random random = new Random(System.currentTimeMillis());
+        for (int i = tamanhoArray; i < array.length; i++) {
+            array[i] = random.nextInt(100);
+        }
+    }
+    static void bubbleSort(int[] array, int tamanhoArray) {
+        for (int i = 0; i < tamanhoArray - 1; i++) {
+            for (int j = 0; j < tamanhoArray - i - 1; j++) {
+                if (array[j] > array[j + 1]) {
+                    // Swap array[j] and array[j + 1]
+                    int temp = array[j];
+                    array[j] = array[j + 1];
+                    array[j + 1] = temp;
+                }
+            }
+        }
+        if (tamanhoArray == 0) {
+            System.out.println("O array está vazio.");
+        } else {
+            Arrays.sort(array, 0, tamanhoArray);
+            System.out.println("Valores armazenados no array:");
+            for (int i = 0; i < tamanhoArray; i++) {
+                System.out.println("Índice " + i + ": " + array[i]);
+            }
+        }
+    }
+    static void selectionSort(int[] array, int tamanhoArray) {
+        for (int i = 0; i < tamanhoArray - 1; i++) {
+            int minIndex = i;
+            for (int j = i + 1; j < tamanhoArray; j++) {
+                if (array[j] < array[minIndex]) {
+                    minIndex = j;
+                }
+            }
+            // Swap array[i] and array[minIndex]
+            int temp = array[i];
+            array[i] = array[minIndex];
+            array[minIndex] = temp;
+        }
+        if (tamanhoArray == 0) {
+            System.out.println("O array está vazio.");
+        } else {
+            Arrays.sort(array, 0, tamanhoArray);
+            System.out.println("Valores armazenados no array:");
+            for (int i = 0; i < tamanhoArray; i++) {
+                System.out.println("Índice " + i + ": " + array[i]);
+            }
+        }
+    }
+
+    static void insertionSort(int[] array, int tamanhoArray) {
+        for (int i = 1; i < tamanhoArray; i++) {
+            int key = array[i];
+            int j = i - 1;
+            while (j >= 0 && array[j] > key) {
+                array[j + 1] = array[j];
+                j = j - 1;
+            }
+            array[j + 1] = key;
+        }
+        if (tamanhoArray == 0) {
+            System.out.println("O array está vazio.");
+        } else {
+            Arrays.sort(array, 0, tamanhoArray);
+            System.out.println("Valores armazenados no array:");
+            for (int i = 0; i < tamanhoArray; i++) {
+                System.out.println("Índice " + i + ": " + array[i]);
+            }
+        }
+    }
+    static void quickSort(int[] array, int low, int high) {
+        if (low < high) {
+            int pivot = partition(array, low, high);
+
+            quickSort(array, low, pivot - 1);
+            quickSort(array, pivot + 1, high);
+        }
+
+    }
+    static int partition(int[] array, int low, int high) {
+        int pivot = array[high];
+        int i = (low - 1);
+        for (int j = low; j <= high - 1; j++) {
+            if (array[j] < pivot) {
+                i++;
+                // Swap array[i] and array[j]
+                int temp = array[i];
+                array[i] = array[j];
+                array[j] = temp;
+            }
+        }
+        // Swap array[i + 1] and array[high] (or pivot)
+        int temp = array[i + 1];
+        array[i + 1] = array[high];
+        array[high] = temp;
+
+        return i + 1;
+    }
+
+
+}
