@@ -1,0 +1,164 @@
+
+import java.util.Scanner;
+
+public class menucomfuncao {
+
+    static void mostrarMenu() {
+        System.out.println("\nMenu de Opções:");
+        System.out.println("1) Criar vetor vazio ou 'zerar' o vetor.");
+        System.out.println("2) Inserir um valor no vetor.");
+        System.out.println("3) Apagar um valor do vetor.");
+        System.out.println("4) Consultar se existe determinado valor no vetor.");
+        System.out.println("5) Consultar quantos valores significativos ocupam o vetor.");
+        System.out.println("6) Consultar qual o maior valor armazenado no vetor.");
+        System.out.println("7) Consultar qual o menor valor armazenado no vetor.");
+        System.out.println("8) Apresentar listagem dos valores armazenados no vetor.");
+        System.out.println("0) Sair do programa.");
+        System.out.println("----------------------------------------------------------");
+        System.out.print("Escolha uma opção: ");
+    }
+
+    static void zerarVetor(int[] vetor) {
+        for (int i = 0; i < vetor.length; i++) {
+            vetor[i] = 0;
+        }
+    }
+
+    static void inserirValor(int[] array, int tamanhoArray) {
+        Scanner tec = new Scanner(System.in);
+        
+         if (tamanhoArray < array.length) {
+            System.out.print("Insira o valor: ");
+            int valor = tec.nextInt();
+            array[tamanhoArray] = valor;
+            System.out.println("Valor " + valor + " foi inserido no vetor.");
+        } else {
+            System.out.println("O vetor está cheio.");
+        }
+        
+    }
+
+    static void apagarValor(int[] array, int tamanhoArray) {
+        Scanner tec = new Scanner(System.in);
+        System.out.print("Digite o valor que deseja apagar: ");
+        int valorApagar = tec.nextInt();
+        for (int i = 0; i < tamanhoArray; i++) {
+            if (array[i] == valorApagar) {
+                array[i] = 0;
+                System.out.println("Valor " + valorApagar + " foi apagado do vetor.");
+                System.out.println("Vetor atual: " + array[i]);
+                return; 
+            }
+        }
+        System.out.println("Valor não encontrado no vetor.");
+    }
+
+    static void consultarValor(int[] array, int tamanhoArray) {
+        Scanner tec = new Scanner(System.in);
+        System.out.print("Digite o valor que deseja consultar: ");
+        int valorConsultar = tec.nextInt();
+        for (int i = 0; i < tamanhoArray; i++) {
+            if (array[i] == valorConsultar) {
+                System.out.println("Valor foi encontrado na casa " + i);
+                return; 
+            }
+        }
+        System.out.println("Valor não encontrado no vetor.");
+    }
+
+    static void consultarQntd(int[] array, int tamanhoArray) {
+        System.out.println("Quantidade de valores significativos: " + tamanhoArray);
+    }
+
+    static void maior(int[] array, int tamanhoArray) {
+        if (tamanhoArray > 0) {
+            int maiorVal = array[0];
+            int iMaior = 0;
+            for (int i = 1; i < tamanhoArray; i++) {
+                if (array[i] > maiorVal) {
+                    maiorVal = array[i];
+                    iMaior = i;
+                }
+            }
+            System.out.println("Maior valor: " + maiorVal + " na casa " + iMaior);
+        } else {
+            System.out.println("O vetor está vazio.");
+        }
+    }
+
+    static void menor(int[] array, int tamanhoArray) {
+        if (tamanhoArray > 0) {
+            int menorVal = array[0];
+            int iMenor = 0;
+            for (int i = 1; i < tamanhoArray; i++) {
+                if (array[i] < menorVal) {
+                    menorVal = array[i];
+                    iMenor = i;
+                }
+            }
+            System.out.println("Menor valor: " + menorVal + " na casa " + iMenor);
+        } else {
+            System.out.println("O vetor está vazio.");
+        }
+    }
+
+    static void listarValores(int[] array, int tamanhoArray) {
+        System.out.println("Lista de valores no vetor:");
+        for (int i = 0; i < tamanhoArray; i++) {
+            System.out.print(array[i] + " ");
+        }
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+
+        Scanner tec = new Scanner(System.in);
+        int[] array = new int[20];
+        int tamanhoArray = 0;
+
+        int menu = -1;
+
+        while (menu != 0) {
+
+            mostrarMenu();
+            menu = tec.nextInt();
+
+            switch (menu) {
+                case 1:
+                    zerarVetor(array);
+                    tamanhoArray = 0;
+                    System.out.println("O array foi zerado.");
+                    break;
+                case 2:
+                    inserirValor(array, tamanhoArray);
+                    tamanhoArray++;
+                    break;
+                case 3:
+                    apagarValor(array, tamanhoArray);
+                    break;
+                case 4:
+                    consultarValor(array, tamanhoArray);
+                    break;
+                case 5:
+                    consultarQntd(array, tamanhoArray);
+                    break;
+                case 6:
+                    maior(array, tamanhoArray);
+                    break;
+                case 7:
+                    menor(array, tamanhoArray);
+                    break;
+                case 8:
+                    listarValores(array, tamanhoArray);
+                    break;
+                case 0:
+                    System.out.println("O programa foi encerrado.");
+                    break;
+                default:
+                    System.out.println("Opção inválida.");
+            }
+        }
+
+        tec.close();
+    }
+}
